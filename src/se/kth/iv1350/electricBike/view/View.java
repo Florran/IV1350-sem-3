@@ -27,5 +27,16 @@ public class View {
     public void fakeExecution() {
         CustomerDTO foundCustomer = this.findCustomer("0705556767");
         System.out.print(foundCustomer);
+
+    String bikeSerial = foundCustomer.getBikeSerialNo();
+        String customerPhone = foundCustomer.getPhoneNumber();
+        String problemDescription = "Motor stängs av i uppförsbacke";
+
+    System.out.println("\nReceptionist skriver in felet för cykel " + bikeSerial + ": " + problemDescription);
+
+    contr.createRepairOrder(problemDescription, customerPhone, bikeSerial);
+
+    System.out.println("Systemet har skapat reparationsorder");
+
     }
 }
