@@ -3,6 +3,9 @@ package se.kth.iv1350.electricBike.controller;
 import java.lang.String;
 import se.kth.iv1350.electricBike.integration.*;
 import se.kth.iv1350.electricBike.model.RepairOrder;
+import java.util.List;
+import java.util.ArrayList;
+
 
 public class Controller {
 
@@ -38,5 +41,33 @@ public class Controller {
     public void createRepairOrder(String problemDescr, String customerPhone, String bikeSerialNo) {
         RepairOrder newOrder = new RepairOrder(problemDescr, customerPhone, bikeSerialNo);
         repairOrderReg.saveRepairOrder(newOrder);
+    }
+
+    /**
+     * Tries to find a repair order based on its unique ID.
+     * @param orderId The unique ID of the order
+     * @return The found RepairOrderDTO, or null if not found
+     */
+    public RepairOrderDTO findRepairOrderById(String orderId) {
+        RepairOrder order = repairOrderReg.findRepairOrderById(orderId);
+        if (order != null) {
+            return order.createDTO();
+        }
+        return null;
+    }
+
+    /**
+     * Finds the history of orders for a specific customer.
+     * @param phoneNumber The phone number to search for
+     * @return A list of RepairOrderDTOs belonging to the customer
+     */
+    public List<RepairOrderDTO> findRepairOrderHistory(String phoneNumber) {
+        List<RepairOrder> orders = repairOrderReg.findRepairOrdersByPhone(phoneNumber);
+        List<RepairOrderDTO> dtos = new ArrayList<>();
+
+        for(RepairOrder order : orders) {
+            dtos.add(order.createDTO());
+        }
+        return dtos;
     }
 }

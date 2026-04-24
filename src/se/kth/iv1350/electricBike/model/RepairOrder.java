@@ -1,5 +1,6 @@
 package se.kth.iv1350.electricBike.model;
 
+import se.kth.iv1350.electricBike.integration.RepairOrderDTO;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -31,5 +32,15 @@ public class RepairOrder {
 
     public String getState() {
         return state;
+    }
+
+    public String getCustomerPhone(){
+        return customerPhone;
+    }
+
+
+
+    public RepairOrderDTO createDTO() {
+        return new RepairOrderDTO(id, state, problemDescr);
     }
 }

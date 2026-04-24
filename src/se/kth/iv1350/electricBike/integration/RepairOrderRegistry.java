@@ -24,4 +24,23 @@ public class RepairOrderRegistry {
         }
         return null;
     }
+
+
+
+    public List<RepairOrder> findRepairOrdersByPhone(String phoneNumber) {
+        List<RepairOrder> foundOrders = new ArrayList<>();
+        for (RepairOrder order : repairOrders) {
+            if (order.getCustomerPhone().equals(phoneNumber)) {
+                foundOrders.add(order);
+            }
+        }
+        return foundOrders;
+    }
+
+
+
+
+
+
+
 }
