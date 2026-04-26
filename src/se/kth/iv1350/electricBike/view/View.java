@@ -20,10 +20,7 @@ public class View {
     }
 
     /**
-     * Tries to find a customer based on a specified phone number
-     * 
-     * @param phoneNumber The phone number used to search for the customer
-     * @return Returns the found customer
+     * Runs a hardcoded execution of the basic repair order flow.
      */
     public void fakeExecution() {
         CustomerDTO foundCustomer = contr.findCustomer("0705556767");
@@ -42,7 +39,8 @@ public class View {
         System.out.println("\nTekniker söker fram ordern via telefonnummer...");
         java.util.List<RepairOrderDTO> history = contr.findRepairOrderHistory(customerPhone);
 
-        RepairOrderDTO foundOrder = repairOrders.get(0);
+        String generatedOrderId = history.get(0).getId();
+        RepairOrderDTO foundOrder = contr.findRepairOrderById(generatedOrderId);
 
         System.out.println("Systemet visar orderdetaljer från DTO:");
         System.out.println(" - Order-ID: " + foundOrder.getId());

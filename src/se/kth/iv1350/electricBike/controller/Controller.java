@@ -61,6 +61,36 @@ public class Controller {
     }
 
     /**
+     * Tries to find a repair order based on its unique ID.
+     *
+     * @param orderId The unique ID of the order
+     * @return The found RepairOrderDTO, or null if not found
+     */
+    public RepairOrderDTO findRepairOrderById(String orderId) {
+        RepairOrder order = repairOrderReg.findRepairOrderById(orderId);
+        if (order != null) {
+            return order.createDTO();
+        }
+        return null;
+    }
+
+    /**
+     * Finds the history of orders for a specific customer.
+     *
+     * @param phoneNumber The phone number to search for
+     * @return A list of RepairOrderDTOs belonging to the customer
+     */
+    public List<RepairOrderDTO> findRepairOrderHistory(String phoneNumber) {
+        List<RepairOrder> orders = repairOrderReg.findRepairOrdersByPhone(phoneNumber);
+        List<RepairOrderDTO> dtos = new ArrayList<>();
+
+        for (RepairOrder order : orders) {
+            dtos.add(order.createDTO());
+        }
+        return dtos;
+    }
+
+    /**
      * Adds a new finding from the technician's inspection to a specific repair
      * order.
      *
