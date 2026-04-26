@@ -1,4 +1,6 @@
 package se.kth.iv1350.electricBike.integration;
 
-public class BikeDTO {
-}
+/**
+ * Data transfer object for bike information.
+ */
+public class BikeDTO {}
