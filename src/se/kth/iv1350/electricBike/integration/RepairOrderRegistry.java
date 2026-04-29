@@ -32,4 +32,32 @@ public class RepairOrderRegistry {
     public List<RepairOrder> findAllRepairOrders() {
         return new ArrayList<>(repairOrders);
     }
+
+    /**
+     * Finds a repair order by its unique ID.
+     * @param id The unique ID of the order to find.
+     * @return The matching RepairOrder, or null if no match exists.
+     */
+    public RepairOrder findRepairOrderById(String id) {
+        for (RepairOrder order : repairOrders) {
+            if (order.getId().equals(id)) {
+                return order;
+            }
+        }
+        return null;
+    }
+
+/**
+     * Finds an active repair order belonging to a customer with the given phone number.
+     * * @param phoneNumber The customer's phone number.
+     * @return The matching RepairOrder, or null if none is found.
+     */
+    public RepairOrder findRepairOrderByPhone(String phoneNumber) {
+        for (RepairOrder order : repairOrders) {
+            if (order.getCustomerPhone().equals(phoneNumber)) {
+                return order;
+            }
+        }
+        return null;
+    }
 }

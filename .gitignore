@@ -23,9 +23,9 @@
 hs_err_pid*
 replay_pid*
 
-lit
+# IDE config
 pom.xml
 .zed
-.idea
-target
-bin
+
+lib/
+.vscode/

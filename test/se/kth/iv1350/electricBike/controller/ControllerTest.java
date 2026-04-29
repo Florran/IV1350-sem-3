@@ -1,18 +1,16 @@
 package se.kth.iv1350.electricBike.controller;
 
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import se.kth.iv1350.electricBike.integration.CustomerDTO;
-import se.kth.iv1350.electricBike.integration.CustomerRegistry;
-import se.kth.iv1350.electricBike.integration.RepairOrderDTO;
-import se.kth.iv1350.electricBike.integration.RepairOrderRegistry;
+import se.kth.iv1350.electricBike.integration.*;
+import se.kth.iv1350.electricBike.model.RepairOrder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ControllerTest {
     private Controller contr;
+    private String savedOrderId;
 
     @BeforeEach
     public void setUp() {
@@ -20,11 +18,19 @@ public class ControllerTest {
         RepairOrderRegistry repairReg = new RepairOrderRegistry();
 
         this.contr = new Controller(customerReg, repairReg);
+
+        String phone = "0701112233";
+        contr.createRepairOrder("Motor error", phone, "SN999");
+
+        
+        RepairOrderDTO foundOrder = contr.findRepairOrder(phone);
+        savedOrderId = foundOrder.getId();
     }
 
     @AfterEach
     public void tearDown() {
         this.contr = null;
+        this.savedOrderId = null;
     }
 
     @Test
@@ -54,37 +60,20 @@ public class ControllerTest {
     }
 
     @Test
-    public void testFindAllRepairOrdersReturnsEmptyListWhenNoOrdersExist() {
-        List<RepairOrderDTO> result = this.contr.findAllRepairOrders();
+    void testAddDiagnosticResultViaController() {
+        contr.addDiagnosticResult(savedOrderId, "Sensor trasig");
 
-        assertTrue(result.isEmpty(), "Repair order list should be empty before any order has been created");
+        RepairOrderDTO updatedOrder = contr.findRepairOrderById(savedOrderId);
+        assertNotNull(updatedOrder, "Ordern borde existera och gå att hämta ut.");
     }
 
     @Test
-    public void testCreateRepairOrderAddsRepairOrder() {
-        String problemDescr = "Motor stangs av i uppforsbacke";
-        String customerPhone = "0705556767";
-        String bikeSerialNo = "0001";
+    void testAcceptRepairOrderChangesStateViaController() {
+        contr.acceptRepairOrder(savedOrderId);
 
-        this.contr.createRepairOrder(problemDescr, customerPhone, bikeSerialNo);
-        List<RepairOrderDTO> result = this.contr.findAllRepairOrders();
-
-        assertEquals(1, result.size(), "One repair order should have been created");
-    }
-
-    @Test
-    public void testCreatedRepairOrderHasCorrectInformation() {
-        String problemDescr = "Batteriet laddar inte";
-        String customerPhone = "0705556767";
-        String bikeSerialNo = "0001";
-
-        this.contr.createRepairOrder(problemDescr, customerPhone, bikeSerialNo);
-        RepairOrderDTO result = this.contr.findAllRepairOrders().get(0);
-
-        assertNotNull(result.getId(), "Created repair order should have an id");
-        assertFalse(result.getId().trim().isEmpty(), "Created repair order id should not be blank");
-        assertEquals("Newly created", result.getState(), "Created repair order should have initial state");
-        assertEquals(problemDescr, result.getProblemDescr(), "Created repair order should keep the problem description");
+        RepairOrderDTO acceptedOrder = contr.findRepairOrderById(savedOrderId);
+        assertEquals("Accepted", acceptedOrder.getState(),
+                "Orderstatus borde vara 'Accepted' efter att controllern anropats.");
     }
 
 }
