@@ -3,14 +3,14 @@ package se.kth.iv1350.electricBike.integration;
 /**
  * Data transfer object containing customer and bike information.
  */
-public class CustomerDTO {
+public final class CustomerDTO {
 
-    private String name;
-    private String email;
-    private String phoneNumber;
-    private String bikeBrand;
-    private String bikeSerialNo;
-    private String bikeModel;
+    private final String name;
+    private final String email;
+    private final String phoneNumber;
+    private final String bikeBrand;
+    private final String bikeSerialNo;
+    private final String bikeModel;
 
     /**
      * The CustomerDTO constructor, this function populates the DTO's attributes

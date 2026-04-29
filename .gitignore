@@ -26,6 +26,12 @@ replay_pid*
 # IDE config
 pom.xml
 .zed
+.idea
 
 lib/
 .vscode/
+
+bin
+target
+
+lit
