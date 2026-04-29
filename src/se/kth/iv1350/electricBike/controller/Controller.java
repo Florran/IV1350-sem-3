@@ -12,15 +12,18 @@ public class Controller {
 
     private CustomerRegistry customerReg;
     private RepairOrderRegistry repairOrderReg;
+    private Printer printer;
 
     /**
      * The controller constructor
      * @param customerReg CustomerRegistry reference so controller can make calls to CustomerRegistry
      * @param repairOrderReg RepairOrderRegistry reference used to store repair orders
+     * @param printer Printer reference used to print accepted repair orders
      */
-    public Controller(CustomerRegistry customerReg, RepairOrderRegistry repairOrderReg) {
+    public Controller(CustomerRegistry customerReg, RepairOrderRegistry repairOrderReg, Printer printer) {
         this.customerReg = customerReg;
         this.repairOrderReg = repairOrderReg;
+        this.printer = printer;
     }
 
     /**
@@ -120,5 +123,8 @@ public class Controller {
     public void acceptRepairOrder(String repairOrderId) {
         RepairOrder repairOrder = repairOrderReg.findRepairOrderById(repairOrderId);
         repairOrder.acceptRepairOrder();
+        repairOrderReg.updateRepairOrder(repairOrder);
+        RepairOrderDTO repairOrderToPrint = repairOrder.createDTO();
+        printer.printRepairOrder(repairOrderToPrint);
     }
 }
