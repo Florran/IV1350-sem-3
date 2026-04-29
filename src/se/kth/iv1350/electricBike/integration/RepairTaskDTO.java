@@ -32,4 +32,14 @@ public final class RepairTaskDTO {
     public boolean isComplete() {
         return complete;
     }
+
+    /**
+     * Returns a human-readable string with the task description and status.
+     * @return A single-line string in the form "description (done|pending)".
+     */
+    @Override
+    public String toString() {
+        String status = complete ? "done" : "pending";
+        return description + " (" + status + ")";
+    }
 }

@@ -84,4 +84,18 @@ public final class CustomerDTO {
     public String getBikeModel() {
         return this.bikeModel;
     }
+
+    /**
+     * Returns a human-readable string with all fields of this DTO.
+     * @return A multi-line string containing every attribute.
+     */
+    @Override
+    public String toString() {
+        return "Name:               " + name + "\n" +
+               "Email:              " + email + "\n" +
+               "Phone number:       " + phoneNumber + "\n" +
+               "Bike brand:         " + bikeBrand + "\n" +
+               "Bike serial number: " + bikeSerialNo + "\n" +
+               "Bike model:         " + bikeModel;
+    }
 }

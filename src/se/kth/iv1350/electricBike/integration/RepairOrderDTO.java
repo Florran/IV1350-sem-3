@@ -115,4 +115,38 @@ public final class RepairOrderDTO {
     public List<RepairTaskDTO> getRepairTasks() {
         return repairTasks;
     }
+
+    /**
+     * Returns a human-readable string with all fields of this DTO,
+     * including diagnostic results and repair tasks.
+     * @return A multi-line string containing every attribute.
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Order id:              ").append(id).append("\n");
+        sb.append("State:                 ").append(state).append("\n");
+        sb.append("Customer phone:        ").append(customerPhone).append("\n");
+        sb.append("Bike serial number:    ").append(bikeSerialNo).append("\n");
+        sb.append("Problem description:   ").append(problemDescr).append("\n");
+        sb.append("Created:               ").append(date).append("\n");
+        sb.append("Estimated completion:  ").append(estimatedCompletionDate).append("\n");
+        sb.append("Diagnostic results:");
+        if (diagnosticResults.isEmpty()) {
+            sb.append(" (none)");
+        } else {
+            for (String result : diagnosticResults) {
+                sb.append("\n  - ").append(result);
+            }
+        }
+        sb.append("\n").append("Repair tasks:");
+        if (repairTasks.isEmpty()) {
+            sb.append(" (none)");
+        } else {
+            for (RepairTaskDTO task : repairTasks) {
+                sb.append("\n  - ").append(task);
+            }
+        }
+        return sb.toString();
+    }
 }
