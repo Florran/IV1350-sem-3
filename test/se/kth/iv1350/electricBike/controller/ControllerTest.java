@@ -103,7 +103,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void testFindAllReturnsDTOsForAllStoredOrders() {
+    public void testTwoCreatesProduceTwoDistinctDTOs() {
         this.contr.createRepairOrder("Motor stangs av i uppforsbacke", "0705556767", "0001");
         this.contr.createRepairOrder("Batteriet laddar inte", "0705556768", "0002");
 
