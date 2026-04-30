@@ -81,4 +81,25 @@ public class RepairOrderTest {
         assertEquals(repairOrder.getProblemDescr(), dto.getProblemDescr(),
                 "DTO should contain the problem description");
     }
+
+    @Test
+    void testGetRepairTasksReturnsCopy() {
+        repairOrder.addRepairTask("Byt kedja");
+        repairOrder.getRepairTasks().clear();
+        assertEquals(1, repairOrder.getRepairTasks().size(),
+                "External clear() should not affect internal task list.");
+    }
+
+    @Test
+    void testCreateDTOContainsDiagnosticResultsAndRepairTasks() {
+        repairOrder.addDiagnosticResult("Slitet batteri");
+        repairOrder.addRepairTask("Byt batteri");
+        RepairOrderDTO dto = repairOrder.createDTO();
+        assertTrue(dto.getDiagnosticResults().contains("Slitet batteri"),
+                "DTO should contain added diagnostic results.");
+        assertEquals(1, dto.getRepairTasks().size(),
+                "DTO should contain added repair tasks.");
+        assertEquals("Byt batteri", dto.getRepairTasks().get(0).getDescription(),
+                "DTO repair task should preserve description.");
+    }
 }

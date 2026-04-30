@@ -1,6 +1,5 @@
 package se.kth.iv1350.electricBike.view;
 
-import java.util.List;
 import se.kth.iv1350.electricBike.controller.Controller;
 import se.kth.iv1350.electricBike.integration.*;
 
@@ -13,8 +12,7 @@ public class View {
 
     /**
      * The view constructor
-     *
-     * @param contr Controller reference so view can make calls to controller
+     * * @param contr Controller reference so view can make calls to controller
      */
     public View(Controller contr) {
         this.contr = contr;
@@ -25,7 +23,7 @@ public class View {
      */
     public void fakeExecution() {
         CustomerDTO foundCustomer = contr.findCustomer("0705556767");
-        System.out.println(foundCustomer);
+        System.out.print(foundCustomer);
 
         String bikeSerial = foundCustomer.getBikeSerialNo();
         String customerPhone = foundCustomer.getPhoneNumber();
@@ -37,14 +35,15 @@ public class View {
 
         System.out.println("Systemet har skapat reparationsorder");
 
-        System.out.println("\nTekniker hämtar alla reparationsordrar...");
-        List<RepairOrderDTO> allOrders = contr.findAllRepairOrders();
-        for (RepairOrderDTO order : allOrders) {
-            System.out.println(order);
-        }
+        System.out.println("\nTekniker söker fram ordern via telefonnummer...");
 
-        RepairOrderDTO foundOrder = allOrders.get(allOrders.size() - 1);
+        RepairOrderDTO foundOrder = contr.findRepairOrderByNumber(customerPhone);
         String generatedOrderId = foundOrder.getId();
+
+        System.out.println("Systemet visar orderdetaljer från DTO:");
+        System.out.println(" - Order-ID: " + foundOrder.getId());
+        System.out.println(" - Status: " + foundOrder.getState());
+        System.out.println(" - Beskrivning: " + foundOrder.getProblemDescr());
 
         System.out.println("\n--- Tekniker inspekterar cykeln ---");
         System.out.println("Tekniker anger fel och föreslår reparationer...");
@@ -58,12 +57,15 @@ public class View {
         System.out.println("Diagnostik och reparationsuppgifter har sparats i ordern.");
 
         System.out.println("\n--- Presenterar för kund ---");
-        RepairOrderDTO orderForCustomer = contr.findRepairOrderById(generatedOrderId);
-        System.out.println(orderForCustomer);
+        System.out.println("Visar order för kund: " + foundOrder.getProblemDescr());
+        System.out.println("Systemet beräknar priset (simulerat)...");
 
         System.out.println("\n--- Kundens svar ---");
         System.out.println("Kunden accepterar reparationen.");
 
         contr.acceptRepairOrder(generatedOrderId);
+
+        RepairOrderDTO updatedOrder = contr.findRepairOrderById(generatedOrderId);
+        System.out.println("Orderstatus är nu uppdaterad till: " + updatedOrder.getState());
     }
 }
