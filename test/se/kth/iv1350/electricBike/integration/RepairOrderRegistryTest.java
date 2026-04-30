@@ -2,6 +2,7 @@ package se.kth.iv1350.electricBike.integration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,21 +10,21 @@ import se.kth.iv1350.electricBike.model.RepairOrder;
 
 public class RepairOrderRegistryTest {
 
-    private RepairOrderRegistry registry;
+    private RepairOrderRegistry repairOrderReg;
 
     @BeforeEach
     public void setUp() {
-        this.registry = new RepairOrderRegistry();
+        this.repairOrderReg = new RepairOrderRegistry();
     }
 
     @AfterEach
     public void tearDown() {
-        this.registry = null;
+        this.repairOrderReg = null;
     }
 
     @Test
     public void testFindByIdInEmptyRegistryReturnsNull() {
-        RepairOrder result = registry.findRepairOrderById("anyId");
+        RepairOrder result = repairOrderReg.findRepairOrderById("anyId");
 
         assertNull(result, "Lookup in empty registry should return null.");
     }
@@ -31,9 +32,9 @@ public class RepairOrderRegistryTest {
     @Test
     public void testFindExistingOrderByIdReturnsThatOrder() {
         RepairOrder stored = new RepairOrder("Bromsen ligger på", "0701112233", "SN001");
-        registry.createRepairOrder(stored);
+        repairOrderReg.createRepairOrder(stored);
 
-        RepairOrder result = registry.findRepairOrderById(stored.getId());
+        RepairOrder result = repairOrderReg.findRepairOrderById(stored.getId());
 
         assertNotNull(result, "Existing order should be found by its id.");
         assertEquals(stored.getId(), result.getId(), "Returned order should have the searched id.");
@@ -41,9 +42,9 @@ public class RepairOrderRegistryTest {
 
     @Test
     public void testFindNonExistingIdInPopulatedRegistryReturnsNull() {
-        registry.createRepairOrder(new RepairOrder("Bromsen ligger på", "0701112233", "SN001"));
+        repairOrderReg.createRepairOrder(new RepairOrder("Bromsen ligger på", "0701112233", "SN001"));
 
-        RepairOrder result = registry.findRepairOrderById("does-not-exist");
+        RepairOrder result = repairOrderReg.findRepairOrderById("does-not-exist");
 
         assertNull(result, "Unknown id should return null even when registry has orders.");
     }
@@ -53,11 +54,11 @@ public class RepairOrderRegistryTest {
         RepairOrder first  = new RepairOrder("Punktering", "0700000001", "SN-A");
         RepairOrder target = new RepairOrder("Trasig kedja", "0700000002", "SN-B");
         RepairOrder third  = new RepairOrder("Slitet batteri", "0700000003", "SN-C");
-        registry.createRepairOrder(first);
-        registry.createRepairOrder(target);
-        registry.createRepairOrder(third);
+        repairOrderReg.createRepairOrder(first);
+        repairOrderReg.createRepairOrder(target);
+        repairOrderReg.createRepairOrder(third);
 
-        RepairOrder result = registry.findRepairOrderById(target.getId());
+        RepairOrder result = repairOrderReg.findRepairOrderById(target.getId());
 
         assertNotNull(result, "Matching order should be found among many.");
         assertEquals(target.getId(), result.getId(), "Returned order should be the one with the searched id.");
@@ -67,18 +68,18 @@ public class RepairOrderRegistryTest {
 
     @Test
     public void testFindByEmptyStringReturnsNull() {
-        registry.createRepairOrder(new RepairOrder("Bromsen ligger på", "0701112233", "SN001"));
+        repairOrderReg.createRepairOrder(new RepairOrder("Bromsen ligger på", "0701112233", "SN001"));
 
-        RepairOrder result = registry.findRepairOrderById("");
+        RepairOrder result = repairOrderReg.findRepairOrderById("");
 
         assertNull(result, "Empty string id should return null.");
     }
 
     @Test
     public void testFindByNullReturnsNull() {
-        registry.createRepairOrder(new RepairOrder("Bromsen ligger på", "0701112233", "SN001"));
+        repairOrderReg.createRepairOrder(new RepairOrder("Bromsen ligger på", "0701112233", "SN001"));
 
-        RepairOrder result = registry.findRepairOrderById(null);
+        RepairOrder result = repairOrderReg.findRepairOrderById(null);
 
         assertNull(result, "Null id should return null without throwing.");
     }
@@ -86,13 +87,13 @@ public class RepairOrderRegistryTest {
     @Test
     public void testUpdateExistingOrderKeepsItRetrievableAndDoesNotDuplicate() {
         RepairOrder order = new RepairOrder("Bromsen ligger på", "0701112233", "SN001");
-        registry.createRepairOrder(order);
+        repairOrderReg.createRepairOrder(order);
 
-        registry.updateRepairOrder(order);
+        repairOrderReg.updateRepairOrder(order);
 
-        assertNotNull(registry.findRepairOrderById(order.getId()),
+        assertNotNull(repairOrderReg.findRepairOrderById(order.getId()),
                 "Order should still be retrievable after update with matching id.");
-        assertEquals(1, registry.findAllRepairOrders().size(),
+        assertEquals(1, repairOrderReg.findAllRepairOrders().size(),
                 "Update with matching id should replace, not add a duplicate.");
     }
 
@@ -100,15 +101,15 @@ public class RepairOrderRegistryTest {
     public void testUpdateNonExistingOrderDoesNotAddIt() {
         RepairOrder stored = new RepairOrder("Bromsen ligger på", "0701112233", "SN001");
         RepairOrder notStored = new RepairOrder("Punktering", "0700000002", "SN002");
-        registry.createRepairOrder(stored);
+        repairOrderReg.createRepairOrder(stored);
 
-        registry.updateRepairOrder(notStored);
+        repairOrderReg.updateRepairOrder(notStored);
 
-        assertNull(registry.findRepairOrderById(notStored.getId()),
+        assertNull(repairOrderReg.findRepairOrderById(notStored.getId()),
                 "Update with unknown id should not insert the order.");
-        assertEquals(1, registry.findAllRepairOrders().size(),
+        assertEquals(1, repairOrderReg.findAllRepairOrders().size(),
                 "Registry should still contain only the originally stored order.");
-        assertEquals(stored.getId(), registry.findAllRepairOrders().get(0).getId(),
+        assertEquals(stored.getId(), repairOrderReg.findAllRepairOrders().get(0).getId(),
                 "The originally stored order should remain in the registry.");
     }
 
@@ -116,9 +117,55 @@ public class RepairOrderRegistryTest {
     public void testUpdateOnEmptyRegistryDoesNothing() {
         RepairOrder order = new RepairOrder("Punktering", "0700000002", "SN002");
 
-        registry.updateRepairOrder(order);
+        repairOrderReg.updateRepairOrder(order);
 
-        assertEquals(0, registry.findAllRepairOrders().size(),
+        assertEquals(0, repairOrderReg.findAllRepairOrders().size(),
                 "Update on empty registry should not insert anything.");
+    }
+
+    @Test
+    public void testFindAllInEmptyRegistryReturnsEmptyList() {
+        List<RepairOrder> result = this.repairOrderReg.findAllRepairOrders();
+
+        assertNotNull(result, "findAllRepairOrders should never return null");
+        assertTrue(result.isEmpty(), "Empty registry should return an empty list");
+    }
+
+    @Test
+    public void testFindAllReturnsAllStoredOrders() {
+        RepairOrder firstOrder = new RepairOrder("Batteriet laddar inte", "0705556767", "0001");
+        RepairOrder secondOrder = new RepairOrder("Bromsen ligger pa", "0705556768", "0002");
+        this.repairOrderReg.createRepairOrder(firstOrder);
+        this.repairOrderReg.createRepairOrder(secondOrder);
+
+        List<RepairOrder> result = this.repairOrderReg.findAllRepairOrders();
+
+        assertEquals(2, result.size(), "Registry should return all stored repair orders");
+        assertTrue(result.contains(firstOrder), "Returned list should contain the first stored repair order");
+        assertTrue(result.contains(secondOrder), "Returned list should contain the second stored repair order");
+    }
+
+    @Test
+    public void testFindAllReturnsDefensiveCopy() {
+        RepairOrder storedOrder = new RepairOrder("Motor stangs av", "0705556767", "0001");
+        this.repairOrderReg.createRepairOrder(storedOrder);
+
+        List<RepairOrder> firstResult = this.repairOrderReg.findAllRepairOrders();
+        firstResult.clear();
+        List<RepairOrder> secondResult = this.repairOrderReg.findAllRepairOrders();
+
+        assertEquals(1, secondResult.size(), "Modifying the returned list should not affect the registry");
+        assertTrue(secondResult.contains(storedOrder), "Stored repair order should remain in the registry");
+    }
+
+    @Test
+    public void testCreateRepairOrderStoresOrder() {
+        RepairOrder newOrder = new RepairOrder("Daligt dack", "0705556767", "0001");
+
+        this.repairOrderReg.createRepairOrder(newOrder);
+
+        List<RepairOrder> result = this.repairOrderReg.findAllRepairOrders();
+        assertEquals(1, result.size(), "Created repair order should be stored in the registry");
+        assertTrue(result.contains(newOrder), "Stored repair order should be the one that was created");
     }
 }
