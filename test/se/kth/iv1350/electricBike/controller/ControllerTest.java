@@ -1,5 +1,7 @@
 package se.kth.iv1350.electricBike.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,9 +13,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ControllerTest {
     private Controller contr;
     private String savedOrderId;
+    private final PrintStream originalOut = System.out;
 
     @BeforeEach
     public void setUp() {
+        System.setOut(new PrintStream(new ByteArrayOutputStream()));
+
         CustomerRegistry customerReg = new CustomerRegistry();
         RepairOrderRegistry repairReg = new RepairOrderRegistry();
         Printer printer = new Printer();
@@ -23,13 +28,13 @@ public class ControllerTest {
         String phone = "0701112233";
         contr.createRepairOrder("Motor error", phone, "SN999");
 
-        
-        RepairOrderDTO foundOrder = contr.findRepairOrder(phone);
+        RepairOrderDTO foundOrder = contr.findRepairOrderByNumber(phone);
         savedOrderId = foundOrder.getId();
     }
 
     @AfterEach
     public void tearDown() {
+        System.setOut(originalOut);
         this.contr = null;
         this.savedOrderId = null;
     }
