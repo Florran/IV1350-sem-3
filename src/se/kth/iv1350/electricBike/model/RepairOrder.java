@@ -19,7 +19,6 @@ public class RepairOrder {
     private LocalDateTime date;
     private LocalDateTime estimatedCompletionDate;
     private String state;
-
     private DiagnosticReport diagnosticReport;
     private List<RepairTask> repairTasks;
 
@@ -36,10 +35,8 @@ public class RepairOrder {
         this.customerPhone = customerPhone;
         this.bikeSerialNo = bikeSerialNo;
         this.date = LocalDateTime.now();
-        // Hardcoded estimate: one week from order creation
         this.estimatedCompletionDate = this.date.plusWeeks(1);
         this.state = "Newly created";
-
         this.diagnosticReport = new DiagnosticReport();
         this.repairTasks = new ArrayList<>();
     }

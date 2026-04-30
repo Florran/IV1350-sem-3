@@ -32,7 +32,7 @@ public class ControllerTest {
     }
 
     private String createOrderAndGetId() {
-        String phone = "0701112233";
+        String phone = "0707464750";
         contr.createRepairOrder("Motor error", phone, "SN999");
         return contr.findRepairOrderByNumber(phone).getId();
     }
@@ -68,8 +68,36 @@ public class ControllerTest {
 
         contr.addDiagnosticResult(savedOrderId, "Sensor trasig");
 
-        RepairOrderDTO updatedOrder = contr.findRepairOrderById(savedOrderId);
-        assertNotNull(updatedOrder, "Ordern borde existera och gå att hämta ut.");
+        RepairOrderDTO dto = contr.findRepairOrderById(savedOrderId);
+        assertTrue(dto.getDiagnosticResults().contains("Sensor trasig"),
+                "Diagnostic result should be stored on the order.");
+    }
+
+    @Test
+    void testAddMultipleDiagnosticResultsViaController() {
+        String savedOrderId = createOrderAndGetId();
+
+        contr.addDiagnosticResult(savedOrderId, "Sensor trasig");
+        contr.addDiagnosticResult(savedOrderId, "Slitna bromsbelägg");
+
+        RepairOrderDTO dto = contr.findRepairOrderById(savedOrderId);
+        assertTrue(dto.getDiagnosticResults().contains("Sensor trasig") &&
+                dto.getDiagnosticResults().contains("Slitna bromsbelägg"),
+                "Multiple diagnostic results should be stored on the order.");
+        assertEquals(2, dto.getDiagnosticResults().size(),
+                "The order should contain exactly two diagnostic results.");
+    }
+
+    @Test
+    void testAddRepairTaskViaController() {
+        String savedOrderId = createOrderAndGetId();
+
+        contr.addRepairTask(savedOrderId, "Byt kedja");
+
+        RepairOrderDTO dto = contr.findRepairOrderById(savedOrderId);
+        boolean found = dto.getRepairTasks().stream()
+                .anyMatch(t -> t.getDescription().equals("Byt kedja"));
+        assertTrue(found, "Repair task should be stored on the order.");
     }
 
     @Test
@@ -126,7 +154,7 @@ public class ControllerTest {
         assertNotNull(result.getId(), "Created repair order should have an id");
         assertFalse(result.getId().trim().isEmpty(), "Created repair order id should not be blank");
         assertEquals("Newly created", result.getState(), "Created repair order should have initial state");
-        assertEquals(problemDescr, result.getProblemDescr(), "Created repair order should keep the problem description");
+        assertEquals(problemDescr, result.getProblemDescr(),
+                "Created repair order should keep the problem description");
     }
-
 }
