@@ -21,7 +21,7 @@ public class DiagnosticReport {
      *
      * @param result A description of the fault or finding.
      */
-    public void addResult(String result) {
+    void addResult(String result) {
         this.results.add(result);
     }
 
