@@ -2,7 +2,8 @@ package se.kth.iv1350.electricBike.view;
 
 import java.util.List;
 import se.kth.iv1350.electricBike.controller.Controller;
-import se.kth.iv1350.electricBike.integration.*;
+import se.kth.iv1350.electricBike.integration.CustomerDTO;
+import se.kth.iv1350.electricBike.integration.RepairOrderDTO;
 
 /**
  * Represents the view layer used to run the application flow.

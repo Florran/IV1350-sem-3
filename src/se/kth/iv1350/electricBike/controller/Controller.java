@@ -2,7 +2,11 @@ package se.kth.iv1350.electricBike.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import se.kth.iv1350.electricBike.integration.*;
+import se.kth.iv1350.electricBike.integration.CustomerDTO;
+import se.kth.iv1350.electricBike.integration.CustomerRegistry;
+import se.kth.iv1350.electricBike.integration.Printer;
+import se.kth.iv1350.electricBike.integration.RepairOrderDTO;
+import se.kth.iv1350.electricBike.integration.RepairOrderRegistry;
 import se.kth.iv1350.electricBike.model.RepairOrder;
 
 /**
