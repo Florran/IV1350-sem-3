@@ -112,6 +112,20 @@ public class ControllerTest {
     }
 
     @Test
+    public void testFindRepairOrderByNumberUnknownPhoneReturnsNull() {
+        RepairOrderDTO result = contr.findRepairOrderByNumber("0700000000");
+
+        assertNull(result, "Unknown phone number should return null.");
+    }
+
+    @Test
+    public void testFindRepairOrderByNumberOnEmptyRegistryReturnsNull() {
+        RepairOrderDTO result = contr.findRepairOrderByNumber("0701112233");
+
+        assertNull(result, "Lookup in empty registry should return null.");
+    }
+
+    @Test
     public void testFindAllRepairOrdersReturnsEmptyListWhenNoOrdersExist() {
         List<RepairOrderDTO> result = this.contr.findAllRepairOrders();
 
